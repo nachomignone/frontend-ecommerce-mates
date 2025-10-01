@@ -5,9 +5,9 @@ import HomePage from './pages/HomePage';
 
 function App() {
   return (
-    <div className="App">
+    <div className="mx-auto font-sans max-w-7xl">
       <Navbar/>
-      <main>
+      <main className="min-h-screen">
         <HomePage/>
       </main>
       <Footer/>
