@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'; // ⬅️ IMPORTANTE: Importamos los Hooks
 import { getProducts } from '../services/productService'; // ⬅️ Importamos el servicio de la API
+import ProductList from '../components/ProductList';
+import CategoryCard from '../components/ui/CategoryCard';
+import ReviewSection from '../components/ReviewSection';
 // Importamos los componentes de sección que crearemos después
 
 function HomePage() {
@@ -51,26 +54,26 @@ function HomePage() {
       {/* 2. SECCIONES DE PRODUCTOS (Categorías y Destacados) */}
       <section className="section-categorias">
         <h2>🛍️ Explora nuestras Categorías</h2>
-        {/* Aquí irían las tarjetas de categorías */}
+        <div className="categories-grid">
+            <CategoryCard name="Mates Imperiales" icon="👑" link="/categorias/imperiales" />
+            <CategoryCard name="Mates Torpedo" icon="🚀" link="/categorias/torpedo" />
+            <CategoryCard name="Bombillas de Alpaca" icon="⛏️" link="/categorias/bombillas" />
+            <CategoryCard name="Sets Completos" icon="🎁" link="/categorias/sets" />
+        </div>
       </section>
 
       <section className="section-destacados">
         <h2>🔥 Productos Destacados (Lista de prueba)</h2>
         {products.length > 0 ? (
             // Muestra el nombre de los primeros 5 productos como prueba de conexión
-            products.slice(0, 5).map(p => (
-                <p key={p._id}>- {p.name} (${p.price})</p>
-            ))
+            <ProductList products={products} />
         ) : (
             <p>No hay productos en la base de datos. Usa tu API POST para agregar algunos.</p>
         )}
       </section>
       
       {/* 3. BLOG, REDES y RESEÑAS */}
-      <section className="section-social">
-        <h2>✨ Inspírate: Nuestro Blog y Redes</h2>
-        {/* Aquí iría la integración de Instagram y TikTok */}
-      </section>
+      <ReviewSection /> {/* Componente para la sección de reseñas y blog */}
       
     </div>
   );
