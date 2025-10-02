@@ -45,10 +45,18 @@ function HomePage() {
     <div className="home-page">
       
       {/* 1. BANNER PRINCIPAL */}
-      <section className="hero-banner">
-        <h1>¡La mejor selección de Mates del NOA!</h1>
-        <p>Hemos cargado **{products.length} productos** desde la API. ¡Conexión Full-Stack Exitosa! 🎉</p> 
-        <button>Ver Promociones</button>
+      <section className="bg-pmate-background py-20 text-center border-b-4 border-pmate-accent">
+        <h1 className="text-5xl font-extrabold text-pmate-primary mb-4">
+          Un Mate a la Medida de Cada Ocasión
+        </h1>
+        <p className="text-xl font-medium text-gray-700 mb-6">
+          Hemos cargado **{products.length} productos** desde la API. ¡Conexión Full-Stack Exitosa! 🎉
+        </p>
+        
+        {/* Botón CTA (siguiendo el estilo redondeado) */}
+        <button className="bg-pmate-accent text-pmate-primary font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#03bcfa]/80 transition duration-300">
+          Ver Combos Exclusivos
+        </button>
       </section>
 
       {/* 2. SECCIONES DE PRODUCTOS (Categorías y Destacados) */}

@@ -1,46 +1,95 @@
+// src/components/ui/ProductCard.jsx
+
 import React from 'react';
 
-// El componente recibe el objeto 'product' completo como prop
 function ProductCard({ product }) {
-  // Manejamos un caso simple si la imagen no existe
-  const imageUrl = product.imageUrl || 'https://via.placeholder.com/250x250?text=Mate';
+  const imageUrl = product.images[0] || 'https://via.placeholder.com/250x250?text=Mate';
   
-  // Formateamos el precio a USD o ARS (asumiendo formato local)
-  const formattedPrice = new Intl.NumberFormat('es-AR', {
+  // Asumimos un precio de lista (price) y un precio con descuento (simulado)
+  const listPrice = product.price;
+  const discountedPrice = listPrice * 0.70; // Simula 30% OFF EFEC/TRANSF
+
+  const formattedListPrice = new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: 'ARS',
-  }).format(product.price);
+  }).format(listPrice);
+  
+  const formattedDiscountedPrice = new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+  }).format(discountedPrice);
 
   return (
-    <div className="product-card">
-      {/* Imagen del producto (placeholder si no hay URL) */}
-      <img src={imageUrl} alt={product.name} className="product-image" />
+    // CONTENEDOR PRINCIPAL: Borde sutil, fondo crema (pmate-background)
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden 
+                    transition duration-300 hover:shadow-lg hover:border-pmate-accent 
+                    flex flex-col">
       
-      <div className="card-body">
-        {/* Nombre del producto */}
-        <h3 className="product-name">{product.name}</h3>
-        
-        {/* Precio */}
-        <p className="product-price">{formattedPrice}</p>
-        
-        {/* Disponibilidad */}
-        <span className={`product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
-          {product.stock > 0 ? 'En Stock' : 'Sin Stock'}
+      {/* SECCIÓN IMAGEN */}
+      <div className="relative">
+        <img 
+          src={imageUrl} 
+          alt={product.name} 
+          className="w-full h-48 object-cover" 
+        />
+        {/* Etiqueta de Descuento (Simulada, como en el catálogo) */}
+        <span className="absolute top-2 right-2 bg-pmate-primary text-white 
+                       text-xs font-bold px-2 py-1 rounded-full">
+          30% OFF
         </span>
       </div>
       
-      <button 
-        className="btn-add-to-cart" 
-        disabled={product.stock === 0}
-        // Este botón después tendrá la lógica de carrito
-      >
-        {product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
-      </button>
+      {/* CUERPO DE LA TARJETA */}
+      <div className="p-4 flex flex-col flex-grow">
+        
+        {/* Código de Producto (Opcional, si lo tienes en el modelo) */}
+        <p className="text-xs text-gray-500 mb-1">CÓDIGO: {product.sku || 'MAT001'}</p>
 
-      {/* 💡 En el futuro, lo convertiremos en un enlace para ir al detalle */}
-      <a href={`/products/${product._id}`} className="view-details-link">
-        Ver detalles
-      </a>
+        {/* NOMBRE - Color Primario de la marca */}
+        <h3 className="text-lg font-semibold text-pmate-primary mb-3 truncate">
+          {product.name}
+        </h3>
+        
+        {/* BLOQUE DE PRECIOS - El elemento clave del diseño */}
+        <div className="bg-pmate-background p-3 rounded-lg border border-pmate-secondary/30 mt-auto">
+            {/* Precio de Lista Tachado */}
+            <p className="text-gray-500 text-sm line-through">
+                {formattedListPrice}
+            </p>
+            
+            {/* 3 Cuotas sin interés (Simulado) */}
+            <p className="text-sm font-medium text-gray-700 mb-1">
+                3 cuotas s/interés de {new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(listPrice / 3)}
+            </p>
+
+            {/* Precio Final - EL MÁS GRANDE */}
+            <p className="text-xl font-extrabold text-pmate-primary">
+                30% OFF EFEC/TRANSF
+            </p>
+            <p className="text-2xl font-extrabold text-pmate-primary">
+                {formattedDiscountedPrice}
+            </p>
+        </div>
+
+        {/* Mensaje Promocional */}
+        <p className="text-xs text-gray-600 mt-2 text-center">
+             Agregando a la compra de tu mate una bombilla, TE REGALAMOS EL GRABADO!
+        </p>
+        
+      </div>
+
+      {/* FOOTER DE LA CARD (Botón visible) */}
+      <div className="p-4 pt-0">
+        <button 
+          className="w-full py-2 text-white font-semibold rounded-lg 
+            transition duration-200 
+            bg-pmate-secondary hover:bg-pmate-primary 
+            disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={product.stock === 0}
+        >
+          {product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
+        </button>
+      </div>
     </div>
   );
 }
