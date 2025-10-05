@@ -60,15 +60,22 @@ function HomePage() {
       </section>
 
       {/* 2. SECCIONES DE PRODUCTOS (Categorías y Destacados) */}
-      <section className="section-categorias">
-        <h2>🛍️ Explora nuestras Categorías</h2>
-        <div className="categories-grid">
-            <CategoryCard name="Mates Imperiales" icon="👑" link="/categorias/imperiales" />
-            <CategoryCard name="Mates Torpedo" icon="🚀" link="/categorias/torpedo" />
-            <CategoryCard name="Bombillas de Alpaca" icon="⛏️" link="/categorias/bombillas" />
-            <CategoryCard name="Sets Completos" icon="🎁" link="/categorias/sets" />
+      <section className="py-12 px-4 max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold text-pmate-primary text-center mb-8">
+          🛍️ Explora nuestras Categorías
+        </h2>
+        
+        {/* Contenedor Grid: 3 columnas en desktop, es mejor para mostrar variedad */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"> 
+          <CategoryCard name="Mates" link="/categorias/mates" />
+          <CategoryCard name="Combos" link="/categorias/combos" />
+          <CategoryCard name="Bombillas" link="/categorias/bombillas" />
+          <CategoryCard name="Termos" link="/categorias/termos" />
+          <CategoryCard name="Yerbas" link="/categorias/yerbas" />
+          <CategoryCard name="Materas" link="/categorias/materas" />
         </div>
       </section>
+
 
       <section className="section-destacados">
         <h2>🔥 Productos Destacados (Lista de prueba)</h2>
