@@ -13,6 +13,7 @@ import CombosPage from './pages/CombosPage';
 import BlogPage from './pages/BlogPage';
 import ContactoPage from './pages/ContactoPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProductDetailPage from './pages/ProductDetailPage'; 
 
 function App() {
   return (
@@ -33,6 +34,9 @@ function App() {
           <Route path="/combos" element={<CombosPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contacto" element={<ContactoPage />} />
+
+          {/* RUTA DINÁMICA: Usa el parámetro ":id" */}
+          <Route path="/products/:id" element={<ProductDetailPage />} /> 
 
           {/* Manejo de Rutas No Encontradas (404) */}
           <Route path="*" element={<NotFoundPage />} />

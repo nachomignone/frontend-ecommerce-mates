@@ -1,6 +1,5 @@
-// src/components/ui/ProductCard.jsx
-
 import React from 'react';
+import { Link } from 'react-router-dom'; 
 
 function ProductCard({ product }) {
   const imageUrl = product.images[0] || 'https://via.placeholder.com/250x250?text=Mate';
@@ -90,6 +89,19 @@ function ProductCard({ product }) {
           {product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
         </button>
       </div>
+
+      {/* BOTONES Y ACCIONES */}
+        <div className="p-4 pt-0">
+            {/* ... (Botón de carrito) */}
+
+            {/* Enlace de Detalles (usando Link de React Router) */}
+            <Link 
+              to={`/products/${product._id}`} // Usamos 'to' en lugar de 'href'
+              className="block text-center text-sm text-pmate-accent hover:underline"
+            >
+              Ver detalles
+            </Link>
+        </div>
     </div>
   );
 }
