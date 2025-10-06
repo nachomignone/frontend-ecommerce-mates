@@ -13,7 +13,8 @@ import CombosPage from './pages/CombosPage';
 import BlogPage from './pages/BlogPage';
 import ContactoPage from './pages/ContactoPage';
 import NotFoundPage from './pages/NotFoundPage';
-import ProductDetailPage from './pages/ProductDetailPage'; 
+import ProductDetailPage from './pages/ProductDetailPage';
+import CategoryPage from './pages/CategoryPage';  
 
 function App() {
   // 1. Estado para almacenar el término de búsqueda
@@ -36,6 +37,8 @@ function App() {
           <Route path="/combos" element={<CombosPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contacto" element={<ContactoPage />} />
+          {/* Ruta dinámica para categorías */}
+          <Route path="/categorias/:categoryName" element={<CategoryPage />} />
 
           {/* RUTA DINÁMICA: Usa el parámetro ":id" */}
           <Route path="/products/:id" element={<ProductDetailPage />} /> 
