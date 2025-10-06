@@ -1,16 +1,46 @@
 import React from 'react';
-import Navbar from './components/common/Navbar'; 
+// ➡️ Importamos elementos clave de React Router
+import { Routes, Route } from 'react-router-dom';
+
+// Importamos componentes estructurales
+import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
+
+// Importamos todas las páginas que creamos
 import HomePage from './pages/HomePage';
+import TiendaPage from './pages/TiendaPage';
+import CombosPage from './pages/CombosPage';
+import BlogPage from './pages/BlogPage';
+import ContactoPage from './pages/ContactoPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
-    <div className="mx-auto font-sans max-w-7xl">
-      <Navbar/>
-      <main className="min-h-screen">
-        <HomePage/>
+    // Contenedor principal para estilos globales (definido en el paso anterior)
+    <div className="mx-auto font-sans max-w-screen min-h-screen flex flex-col">
+      
+      {/* 1. COMPONENTES ESTRUCTURALES FIJOS */}
+      <Navbar /> 
+      
+      {/* 2. CONTENIDO PRINCIPAL Y ENRUTAMIENTO */}
+      <main className="flex-grow">
+        <Routes>
+          {/* Ruta principal (HomePage) */}
+          <Route path="/" element={<HomePage />} />
+          
+          {/* Rutas definidas en el Navbar */}
+          <Route path="/tienda" element={<TiendaPage />} />
+          <Route path="/combos" element={<CombosPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/contacto" element={<ContactoPage />} />
+
+          {/* Manejo de Rutas No Encontradas (404) */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </main>
-      <Footer/>
+
+      {/* 3. COMPONENTE ESTRUCTURAL FIJO */}
+      <Footer /> 
     </div>
   );
 }
