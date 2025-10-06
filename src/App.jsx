@@ -1,5 +1,5 @@
-import React from 'react';
-// ➡️ Importamos elementos clave de React Router
+import React, { useState } from 'react';
+// Importamos elementos clave de React Router
 import { Routes, Route } from 'react-router-dom';
 
 // Importamos componentes estructurales
@@ -16,18 +16,20 @@ import NotFoundPage from './pages/NotFoundPage';
 import ProductDetailPage from './pages/ProductDetailPage'; 
 
 function App() {
+  // 1. Estado para almacenar el término de búsqueda
+  const [searchKeyword, setSearchKeyword] = useState('');
   return (
     // Contenedor principal para estilos globales (definido en el paso anterior)
     <div className="mx-auto font-sans max-w-screen min-h-screen flex flex-col">
       
       {/* 1. COMPONENTES ESTRUCTURALES FIJOS */}
-      <Navbar /> 
+      <Navbar setSearchKeyword={setSearchKeyword} /> 
       
       {/* 2. CONTENIDO PRINCIPAL Y ENRUTAMIENTO */}
       <main className="flex-grow">
         <Routes>
           {/* Ruta principal (HomePage) */}
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage searchKeyword={searchKeyword} />} />
           
           {/* Rutas definidas en el Navbar */}
           <Route path="/tienda" element={<TiendaPage />} />

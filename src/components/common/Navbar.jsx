@@ -1,8 +1,18 @@
-// src/components/common/Navbar.jsx
+import React, { useState } from 'react';
 
-import React from 'react';
+function Navbar({ setSearchKeyword }) {
+  // Estado local para controlar el valor del input
+  const [inputValue, setInputValue] = useState('');
 
-function Navbar() {
+  // Función que se ejecuta al presionar Enter en el input
+    const handleSearch = (e) => {
+        // Previene el envío del formulario (que recargaría la página)
+        e.preventDefault(); 
+        
+        // Llama a la función del App.jsx para actualizar el estado global
+        setSearchKeyword(inputValue); 
+    };
+
   return (
     // Contenedor principal: Color de fondo primario (azul oscuro) y texto blanco
     <header className="bg-pmate-primary text-white shadow-lg">
@@ -30,18 +40,22 @@ function Navbar() {
           {/* Buscador y Carrito (Acciones) */}
           <div className="flex items-center space-x-3">
 
-            {/* Buscador (Input visible) */}
-            <input
-              type="text"
-              placeholder="Buscar Mate o Combo..."
-              className="p-1.5 text-sm rounded-lg border-none focus:ring-2 focus:ring-pmate-accent text-gray-800 hidden sm:block"
-            />
-
-            {/* Botón Carrito */}
-            <button
+            {/* 1. FORMULARIO ÚNICO PARA BUSCAR  */}
+            <form onSubmit={handleSearch} className="hidden sm:block">
+              <input 
+                type="text" 
+                placeholder="Buscar Mate o Combo..." 
+                value={inputValue} // Conecta el input al estado local
+                onChange={(e) => setInputValue(e.target.value)} // Actualiza el estado local al escribir
+                // Aplicamos el diseño de Tailwind
+                className="p-1.5 text-sm rounded-lg border-none focus:ring-2 focus:ring-pmate-accent text-gray-800"
+              />
+            </form>
+            
+            {/* 2. Botón Carrito */}
+            <button 
               className="p-2 text-white rounded-full hover:bg-pmate-secondary transition duration-150 relative"
             >
-              {/* Icono de Carrito (Reemplazar con un ícono real, ej: Heroicons) */}
               🛒 <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">0</span>
             </button>
 

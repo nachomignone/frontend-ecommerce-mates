@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react'; // ⬅️ IMPORTANTE: Importamos los Hooks
-import { getProducts } from '../services/productService'; // ⬅️ Importamos el servicio de la API
+import React, { useState, useEffect } from 'react'; // IMPORTANTE: Importamos los Hooks
+
+import axios from 'axios'; // Para hacer llamadas HTTP a la API
+
 import ProductList from '../components/ProductList';
 import CategoryCard from '../components/ui/CategoryCard';
 import ReviewSection from '../components/ReviewSection';
 // Importamos los componentes de sección que crearemos después
 
-function HomePage() {
+const API_URL = 'http://localhost:4000/api/products'; 
+
+function HomePage({ searchKeyword }) {
   // 1. Estados para manejar los datos y el ciclo de vida de la petición
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,11 +17,15 @@ function HomePage() {
 
   // 2. Hook useEffect para ejecutar la llamada a la API una vez al montar el componente
   useEffect(() => {
-    // Función asíncrona para traer los datos
     const fetchProducts = async () => {
       try {
-        const data = await getProducts(); // Llama a la función del servicio
-        setProducts(data); // Actualiza el estado con los datos
+        // Construimos la URL de la API con el parámetro de búsqueda
+        const url = searchKeyword 
+            ? `${API_URL}?keyword=${searchKeyword}` 
+            : API_URL;
+            
+        const response = await axios.get(url); // Llama a la URL construida
+        setProducts(response.data); // Actualiza el estado con los productos recibidos
         setError(null); // Limpiamos cualquier error previo
       } catch (err) {
         console.error("Error al cargar productos:", err);
@@ -29,7 +37,7 @@ function HomePage() {
     };
 
     fetchProducts();
-  }, []); // Array de dependencias vacío para ejecutar solo en el montaje
+  }, [searchKeyword]); // Array de dependencias vacío para ejecutar solo en el montaje
 
   // 3. Renderizado Condicional: Muestra estado de carga o error
   if (loading) {
