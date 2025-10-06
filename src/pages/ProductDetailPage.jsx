@@ -1,19 +1,26 @@
-// src/pages/ProductDetailPage.jsx
-
 import React, { useState, useEffect } from 'react';
-// ➡️ Hook para obtener el parámetro de la URL (el ID)
+// Hook para obtener el parámetro de la URL (el ID)
 import { useParams, Link } from 'react-router-dom'; 
 import axios from 'axios';
+// importamos el hook para usar el contexto del carrito
+import { useCart } from '../context/useCart';
 
 const API_URL = 'http://localhost:4000/api/products'; 
 
 function ProductDetailPage() {
     // Obtenemos el parámetro 'id' de la URL (ej: /products/12345)
     const { id } = useParams(); 
-    
+    const { addItem } = useCart();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Función para manejar el clic en "Añadir al Carrito"
+    const handleAddToCart = () => {
+    if (product) {
+        addItem(product);
+    }
+};
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -51,7 +58,7 @@ function ProductDetailPage() {
         currency: 'ARS',
     }).format(product.price);
 
-    // ➡️ Estructura básica de la página de detalle
+    // Estructura básica de la página de detalle
     return (
         <div className="max-w-7xl mx-auto p-8">
             <Link to="/" className="text-sm text-pmate-accent hover:underline mb-4 block">
@@ -75,7 +82,9 @@ function ProductDetailPage() {
                     
                     <div className="text-3xl font-bold text-pmate-accent mb-4">{formattedPrice}</div>
                     
-                    <button className="bg-pmate-secondary text-white py-3 px-8 rounded-full font-semibold hover:bg-pmate-primary transition">
+                    <button 
+                        onClick={handleAddToCart} // Ejecuta la función del contexto
+                        className="bg-pmate-secondary text-white py-3 px-8 rounded-full font-semibold hover:bg-pmate-primary transition">
                         Añadir al Carrito
                     </button>
                     

@@ -16,13 +16,15 @@ import NotFoundPage from './pages/NotFoundPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CategoryPage from './pages/CategoryPage';  
 
+// Importar el Proveedor del Contexto
+import { CartProvider } from './context/CartContext';
+
 function App() {
   // 1. Estado para almacenar el término de búsqueda
   const [searchKeyword, setSearchKeyword] = useState('');
   return (
-    // Contenedor principal para estilos globales (definido en el paso anterior)
-    <div className="mx-auto font-sans max-w-screen min-h-screen flex flex-col">
-      
+    <CartProvider> {/* Envolvemos toda la app con el proveedor del contexto */}
+    <div className="mx-auto font-sans max-w-screen min-h-screen flex flex-col">      
       {/* 1. COMPONENTES ESTRUCTURALES FIJOS */}
       <Navbar setSearchKeyword={setSearchKeyword} /> 
       
@@ -51,6 +53,7 @@ function App() {
       {/* 3. COMPONENTE ESTRUCTURAL FIJO */}
       <Footer /> 
     </div>
+    </CartProvider>
   );
 }
 
