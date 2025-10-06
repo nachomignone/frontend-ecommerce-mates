@@ -15,6 +15,7 @@ import ContactoPage from './pages/ContactoPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CategoryPage from './pages/CategoryPage';  
+import CartPage from './pages/CartPage'; 
 
 // Importar el Proveedor del Contexto
 import { CartProvider } from './context/CartContext';
@@ -39,6 +40,8 @@ function App() {
           <Route path="/combos" element={<CombosPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contacto" element={<ContactoPage />} />
+           <Route path="/cart" element={<CartPage />} /> 
+          
           {/* Ruta dinámica para categorías */}
           <Route path="/categorias/:categoryName" element={<CategoryPage />} />
 
