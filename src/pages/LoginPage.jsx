@@ -1,12 +1,16 @@
 // src/pages/LoginPage.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/useAuth'; // hook personalizado para usar el contexto de autenticación
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+
+    const { login } = useAuth(); // Obtenemos la función de login del contexto
+    const navigate = useNavigate(); // Hook para la redirección
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -21,9 +25,11 @@ const LoginPage = () => {
 
             console.log('Datos de autenticación/registro recibidos:', _data);
 
-            // FUTURA LÓGICA DE ESTADO (Aquí usaremos la data)
-            // loginUser(_data); 
-            // navigate('/');
+            // LÓGICA DE ESTADO
+            // Gestion de estado: llama a la funcion global de login
+            login(_data); 
+            // Redirige a la página principal después del login
+            navigate('/');
 
             setMessage('Inicio de sesión exitoso! Redirigiendo...'); // o Registro exitoso! Redirigiendo a la tienda...
             // En un paso futuro, guardaremos el token y el usuario aquí

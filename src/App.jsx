@@ -21,48 +21,52 @@ import LoginPage from './pages/LoginPage';
 
 // Importar el Proveedor del Contexto
 import { CartProvider } from './context/CartContext';
+// Importar el Proveedor de Autenticación
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   // 1. Estado para almacenar el término de búsqueda
   const [searchKeyword, setSearchKeyword] = useState('');
   return (
-    <CartProvider> {/* Envolvemos toda la app con el proveedor del contexto */}
-      <div className="mx-auto font-sans max-w-screen min-h-screen flex flex-col">
-        {/* 1. COMPONENTES ESTRUCTURALES FIJOS */}
-        <Navbar setSearchKeyword={setSearchKeyword} />
+    <AuthProvider>
+      <CartProvider> {/* Envolvemos toda la app con el proveedor del contexto */}
+        <div className="mx-auto font-sans max-w-screen min-h-screen flex flex-col">
+          {/* 1. COMPONENTES ESTRUCTURALES FIJOS */}
+          <Navbar setSearchKeyword={setSearchKeyword} />
 
-        {/* 2. CONTENIDO PRINCIPAL Y ENRUTAMIENTO */}
-        <main className="flex-grow">
-          <Routes>
-            {/* Rutas de Autenticación */}
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
+          {/* 2. CONTENIDO PRINCIPAL Y ENRUTAMIENTO */}
+          <main className="flex-grow">
+            <Routes>
+              {/* Rutas de Autenticación */}
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Ruta principal (HomePage) */}
-            <Route path="/" element={<HomePage searchKeyword={searchKeyword} />} />
+              {/* Ruta principal (HomePage) */}
+              <Route path="/" element={<HomePage searchKeyword={searchKeyword} />} />
 
-            {/* Rutas definidas en el Navbar */}
-            <Route path="/tienda" element={<TiendaPage />} />
-            <Route path="/combos" element={<CombosPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/contacto" element={<ContactoPage />} />
-            <Route path="/cart" element={<CartPage />} />
+              {/* Rutas definidas en el Navbar */}
+              <Route path="/tienda" element={<TiendaPage />} />
+              <Route path="/combos" element={<CombosPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/contacto" element={<ContactoPage />} />
+              <Route path="/cart" element={<CartPage />} />
 
-            {/* Ruta dinámica para categorías */}
-            <Route path="/categorias/:categoryName" element={<CategoryPage />} />
+              {/* Ruta dinámica para categorías */}
+              <Route path="/categorias/:categoryName" element={<CategoryPage />} />
 
-            {/* RUTA DINÁMICA: Usa el parámetro ":id" */}
-            <Route path="/products/:id" element={<ProductDetailPage />} />
+              {/* RUTA DINÁMICA: Usa el parámetro ":id" */}
+              <Route path="/products/:id" element={<ProductDetailPage />} />
 
-            {/* Manejo de Rutas No Encontradas (404) */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </main>
+              {/* Manejo de Rutas No Encontradas (404) */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </main>
 
-        {/* 3. COMPONENTE ESTRUCTURAL FIJO */}
-        <Footer />
-      </div>
-    </CartProvider>
+          {/* 3. COMPONENTE ESTRUCTURAL FIJO */}
+          <Footer />
+        </div>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/useCart';
+import { useAuth } from '../../context/useAuth';
 import CartDropdown from './CartDropdown';
+import { AuthDropdown } from './AuthDropdown';
 
 function Navbar({ setSearchKeyword }) {
   // Estado local para controlar el valor del input
@@ -13,6 +15,12 @@ function Navbar({ setSearchKeyword }) {
 
   // estado para controlar el dropdown del carrito (cerrado por defecto)
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // estado para el dropdown de autenticación
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  // Obtener el estado de autenticación
+  const { isAuthenticated } = useAuth();
 
   // Función que se ejecuta al presionar Enter en el input
   const handleSearch = (e) => {
@@ -62,14 +70,36 @@ function Navbar({ setSearchKeyword }) {
               />
             </form>
 
-            {/* 2. Botón Carrito */}
+            {/* 2. Botón de USUARIO / Auth Dropdown  */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setIsAuthOpen(!isAuthOpen); // Alterna el estado de Auth
+                  setIsCartOpen(false); // Cierra el carrito por seguridad
+                }}
+                className="p-2 text-white rounded-full hover:bg-pmate-secondary transition duration-150 relative"
+              >
+                {/* Icono de Usuario (o 👤) - Si está logueado, cambia el color para distinguirlo */}
+                <span className={isAuthenticated ? "text-pmate-accent" : "text-white"}>
+                  👤
+                </span>
+              </button>
+
+              {/* Renderizar el AuthDropdown si isAuthOpen es true */}
+              {isAuthOpen && <AuthDropdown setIsAuthOpen={setIsAuthOpen} />}
+            </div>
+
+            {/* 3. Botón Carrito */}
             {/* CONTENEDOR PRINCIPAL: DIV con posición relativa  */}
             <div className="relative">
 
-              {/* 1. Botón Carrito: SOLO para alternar el estado (onClick) */}
+              {/* 4. Botón Carrito: SOLO para alternar el estado (onClick) */}
               <button
                 // Al hacer clic, alterna el estado isCartOpen
-                onClick={() => setIsCartOpen(!isCartOpen)}
+                onClick={() => {
+                  setIsCartOpen(!isCartOpen)
+                  setIsAuthOpen(false); // Cierra el AuthDropdown por seguridad
+                }}
                 className="p-2 text-white rounded-full hover:bg-pmate-secondary transition duration-150 relative"
               >
                 🛒
@@ -79,8 +109,8 @@ function Navbar({ setSearchKeyword }) {
                 </span>
               </button>
 
-              {/* 2. Renderizar el Dropdown SOLO si isCartOpen es true */}
-              {/* Si está abierto, lo mostramos; el Link a /cart está DENTRO de CartDropdown.jsx ⭐️ */}
+              {/* Renderizar el Dropdown SOLO si isCartOpen es true */}
+              {/* Si está abierto, lo mostramos; el Link a /cart está DENTRO de CartDropdown.jsx */}
               {isCartOpen && <CartDropdown />}
             </div>
           </div>
