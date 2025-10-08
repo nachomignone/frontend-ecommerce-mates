@@ -14,8 +14,10 @@ import BlogPage from './pages/BlogPage';
 import ContactoPage from './pages/ContactoPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProductDetailPage from './pages/ProductDetailPage';
-import CategoryPage from './pages/CategoryPage';  
-import CartPage from './pages/CartPage'; 
+import CategoryPage from './pages/CategoryPage';
+import CartPage from './pages/CartPage';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 
 // Importar el Proveedor del Contexto
 import { CartProvider } from './context/CartContext';
@@ -25,37 +27,41 @@ function App() {
   const [searchKeyword, setSearchKeyword] = useState('');
   return (
     <CartProvider> {/* Envolvemos toda la app con el proveedor del contexto */}
-    <div className="mx-auto font-sans max-w-screen min-h-screen flex flex-col">      
-      {/* 1. COMPONENTES ESTRUCTURALES FIJOS */}
-      <Navbar setSearchKeyword={setSearchKeyword} /> 
-      
-      {/* 2. CONTENIDO PRINCIPAL Y ENRUTAMIENTO */}
-      <main className="flex-grow">
-        <Routes>
-          {/* Ruta principal (HomePage) */}
-          <Route path="/" element={<HomePage searchKeyword={searchKeyword} />} />
-          
-          {/* Rutas definidas en el Navbar */}
-          <Route path="/tienda" element={<TiendaPage />} />
-          <Route path="/combos" element={<CombosPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/contacto" element={<ContactoPage />} />
-          <Route path="/cart" element={<CartPage />} /> 
-          
-          {/* Ruta dinámica para categorías */}
-          <Route path="/categorias/:categoryName" element={<CategoryPage />} />
+      <div className="mx-auto font-sans max-w-screen min-h-screen flex flex-col">
+        {/* 1. COMPONENTES ESTRUCTURALES FIJOS */}
+        <Navbar setSearchKeyword={setSearchKeyword} />
 
-          {/* RUTA DINÁMICA: Usa el parámetro ":id" */}
-          <Route path="/products/:id" element={<ProductDetailPage />} /> 
+        {/* 2. CONTENIDO PRINCIPAL Y ENRUTAMIENTO */}
+        <main className="flex-grow">
+          <Routes>
+            {/* Rutas de Autenticación */}
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
 
-          {/* Manejo de Rutas No Encontradas (404) */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
+            {/* Ruta principal (HomePage) */}
+            <Route path="/" element={<HomePage searchKeyword={searchKeyword} />} />
 
-      {/* 3. COMPONENTE ESTRUCTURAL FIJO */}
-      <Footer /> 
-    </div>
+            {/* Rutas definidas en el Navbar */}
+            <Route path="/tienda" element={<TiendaPage />} />
+            <Route path="/combos" element={<CombosPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/contacto" element={<ContactoPage />} />
+            <Route path="/cart" element={<CartPage />} />
+
+            {/* Ruta dinámica para categorías */}
+            <Route path="/categorias/:categoryName" element={<CategoryPage />} />
+
+            {/* RUTA DINÁMICA: Usa el parámetro ":id" */}
+            <Route path="/products/:id" element={<ProductDetailPage />} />
+
+            {/* Manejo de Rutas No Encontradas (404) */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </main>
+
+        {/* 3. COMPONENTE ESTRUCTURAL FIJO */}
+        <Footer />
+      </div>
     </CartProvider>
   );
 }
