@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCart } from '../../context/useCart';
 import CartDropdown from './CartDropdown';
 
@@ -32,18 +33,18 @@ function Navbar({ setSearchKeyword }) {
 
           {/* Logo y Nombre de la Marca */}
           <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition">
-            {/* 💡 Aquí iría el logo de "Pmate" */}
+            {/* Aquí iría el logo de "Pmate" */}
             <span className="text-xl font-bold tracking-wider">Pmate</span>
           </a>
 
           {/* Enlaces Principales (Centrado) */}
           <nav className="hidden md:flex space-x-6 text-sm font-medium">
             {/* Usaremos 'Tienda' como enlace directo a todos los productos */}
-            <a href="/tienda" className="text-white hover:text-pmate-accent transition duration-150">Tienda</a>
-            <a href="/combos" className="text-white hover:text-pmate-accent transition duration-150">Combos</a>
-            <a href="/promociones" className="text-white hover:text-pmate-accent transition duration-150">Promociones</a>
-            <a href="/blog" className="text-white hover:text-pmate-accent transition duration-150">Blog</a>
-            <a href="/contacto" className="text-white hover:text-pmate-accent transition duration-150">Contacto</a>
+            <Link to="/Tienda" className="text-white hover:text-pmate-accent transition duration-150">Tienda</Link>
+            <Link to="/categorias/Combos" className="text-white hover:text-pmate-accent transition duration-150">Combos</Link>
+            <Link to="/promociones" className="text-white hover:text-pmate-accent transition duration-150">Promociones</Link>
+            <Link to="/blog" className="text-white hover:text-pmate-accent transition duration-150">Blog</Link>
+            <Link to="/contacto" className="text-white hover:text-pmate-accent transition duration-150">Contacto</Link>
           </nav>
 
           {/* Buscador y Carrito (Acciones) */}

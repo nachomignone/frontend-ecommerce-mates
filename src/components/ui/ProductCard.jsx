@@ -1,99 +1,73 @@
-// src/components/ui/ProductCard.jsx
+// src/components/ProductCard.jsx
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../../context/useCart'; // Importamos useCart
+import { useCart } from '../../context/useCart';
 
 function ProductCard({ product }) {
-    const { addItem } = useCart(); 
+    const { addItem } = useCart();
+    
+    // Calcula el precio con el 30% de descuento (para pago en efectivo/transferencia)
+    const discountPrice = product.price * 0.70;
 
-    const imageUrl = product.images[0] || 'https://via.placeholder.com/250x250?text=Mate';
-    const listPrice = product.price;
-    const discountedPrice = listPrice * 0.70; 
-
-    const handleAddToCart = () => {
-        addItem(product);
+    // Formateo de precios
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: 'ARS',
+            minimumFractionDigits: 2,
+        }).format(price);
     };
 
-    const formattedListPrice = new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-    }).format(listPrice);
-    
-    const formattedDiscountedPrice = new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-    }).format(discountedPrice);
-
     return (
-        // ⭐️ ESTE ES EL ÚNICO ELEMENTO PADRE RETORNADO ⭐️
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden 
-                        transition duration-300 hover:shadow-lg hover:border-pmate-accent 
-                        flex flex-col">
+        <div className="bg-white rounded-xl overflow-hidden shadow-lg border-t-4 border-pmate-accent/70 hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 transform">
             
-            {/* SECCIÓN IMAGEN */}
-            <div className="relative">
-                <img 
-                    src={imageUrl} 
-                    alt={product.name} 
-                    className="w-full h-48 object-cover" 
-                />
-                <span className="absolute top-2 right-2 bg-pmate-primary text-white 
-                               text-xs font-bold px-2 py-1 rounded-full">
-                    30% OFF
-                </span>
-            </div>
-            
-            {/* CUERPO DE LA TARJETA */}
-            <div className="p-4 flex flex-col flex-grow">
-                
-                <p className="text-xs text-gray-500 mb-1">CÓDIGO: {product.sku || 'MAT001'}</p>
+            {/* Imagen y Link a Detalles */}
+            <Link to={`/products/${product._id}`}>
+                <div className="h-48 overflow-hidden">
+                    <img 
+                        src={product.images[0] || 'https://via.placeholder.com/400x300?text=Pmate'} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                </div>
+            </Link>
 
-                <h3 className="text-lg font-semibold text-pmate-primary mb-3 truncate">
-                    {product.name}
-                </h3>
+            {/* Contenido de la Tarjeta */}
+            <div className="p-4 flex flex-col justify-between h-[calc(100%-12rem)]">
                 
-                {/* BLOQUE DE PRECIOS */}
-                <div className="bg-pmate-background p-3 rounded-lg border border-pmate-secondary/30 mt-auto">
-                    <p className="text-gray-500 text-sm line-through">
-                        {formattedListPrice}
+                {/* Título y Categoría */}
+                <div className="flex-grow">
+                    <p className="text-xs font-semibold text-pmate-accent uppercase mb-1">
+                        {product.category}
                     </p>
-                    <p className="text-sm font-medium text-gray-700 mb-1">
-                        3 cuotas s/interés de {new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(listPrice / 3)}
+                    <Link to={`/products/${product._id}`}>
+                        <h3 className="text-lg font-bold text-gray-800 hover:text-pmate-primary transition leading-tight">
+                            {product.name}
+                        </h3>
+                    </Link>
+                </div>
+
+                {/* Precios y Descuento */}
+                <div className="mt-3">
+                    <p className="text-sm text-gray-500 line-through">
+                        Precio Regular: {formatPrice(product.price)}
                     </p>
                     <p className="text-xl font-extrabold text-pmate-primary">
-                        30% OFF EFEC/TRANSF
+                        {formatPrice(discountPrice)}
                     </p>
-                    <p className="text-2xl font-extrabold text-pmate-primary">
-                        {formattedDiscountedPrice}
+                    <p className="text-xs font-semibold text-pmate-accent bg-red-100 p-1 rounded inline-block mt-1">
+                        ¡30% OFF EFEC/TRANSF!
                     </p>
                 </div>
 
-                <p className="text-xs text-gray-600 mt-2 text-center">
-                    Agregando a la compra de tu mate una bombilla, TE REGALAMOS EL GRABADO!
-                </p>
-                
-            </div>
-
-            {/* ⭐️ CONSOLIDA LA SECCIÓN DE BOTONES EN UN SOLO DIV ⭐️ */}
-            <div className="p-4 pt-0">
-                <button 
-                    className="w-full py-2 mb-2 text-white font-semibold rounded-lg 
-                            transition duration-200 
-                            bg-pmate-secondary hover:bg-pmate-primary 
-                            disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={product.stock === 0}
-                    onClick={handleAddToCart} // Aquí está la función
+                {/* Botón de Carrito */}
+                <button
+                    onClick={() => addItem(product, 1)}
+                    className="mt-4 w-full py-2 bg-pmate-primary text-white font-bold rounded-lg hover:bg-pmate-secondary transition-colors duration-300 shadow-md"
                 >
-                    {product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
+                    Añadir al Carrito
                 </button>
-
-                <Link 
-                    to={`/products/${product._id}`} 
-                    className="block text-center text-sm text-pmate-accent hover:underline"
-                >
-                    Ver detalles
-                </Link>
             </div>
         </div>
     );

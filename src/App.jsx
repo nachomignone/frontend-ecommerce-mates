@@ -40,7 +40,7 @@ function App() {
           <Route path="/combos" element={<CombosPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contacto" element={<ContactoPage />} />
-           <Route path="/cart" element={<CartPage />} /> 
+          <Route path="/cart" element={<CartPage />} /> 
           
           {/* Ruta dinámica para categorías */}
           <Route path="/categorias/:categoryName" element={<CategoryPage />} />
