@@ -5,6 +5,7 @@ import axios from 'axios'; // Para hacer llamadas HTTP a la API
 import ProductList from '../components/ProductList';
 import CategoryCard from '../components/ui/CategoryCard';
 import ReviewSection from '../components/ReviewSection';
+import ProductCard from '../components/ui/ProductCard'; 
 // Importamos los componentes de sección que crearemos después
 
 const API_URL = 'http://localhost:4000/api/products';
@@ -78,7 +79,8 @@ function HomePage({ searchKeyword }) {
           Un Mate a la Medida de Cada Ocasión
         </h1>
         <p className="text-xl font-medium text-gray-700 mb-6">
-          Hemos cargado **{products.length} productos** desde la API. ¡Conexión Full-Stack Exitosa! 
+          {/* Hemos cargado **{products.length} productos** desde la API. ¡Conexión Full-Stack Exitosa!*/}
+          Descubrí nuestra selección exclusiva de mates y combos diseñados para cada momento.
         </p>
 
         {/* Botón CTA (siguiendo el estilo redondeado) */}

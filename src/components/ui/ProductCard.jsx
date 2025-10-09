@@ -1,16 +1,14 @@
-// src/components/ProductCard.jsx
+// src/components/ui/ProductCard.jsx
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../../context/useCart';
+import { useCart } from '../../context/useCart'; // Hook para el carrito
 
 function ProductCard({ product }) {
-    const { addItem } = useCart();
-    
-    // Calcula el precio con el 30% de descuento (para pago en efectivo/transferencia)
-    const discountPrice = product.price * 0.70;
+    // ⭐️ CORRECCIÓN 1: Renombramos a addItem, que es la función real del contexto
+    const { addItem } = useCart(); 
 
-    // Formateo de precios
+    // ⭐️ CORRECCIÓN 2: Definición de la función de formato (usada internamente)
     const formatPrice = (price) => {
         return new Intl.NumberFormat('es-AR', {
             style: 'currency',
@@ -18,53 +16,62 @@ function ProductCard({ product }) {
             minimumFractionDigits: 2,
         }).format(price);
     };
+    
+    // ⭐️ CORRECCIÓN 3: La variable discountPrice debe usarse.
+    const discountPrice = product.price * 0.70; 
+
+    // ⭐️ CORRECCIÓN 4: Manjeador del clic, usa addItem (la función real)
+    const handleAddToCart = () => {
+        // Asumiendo que addItem maneja la cantidad por defecto como 1
+        addItem(product);
+    };
 
     return (
-        <div className="bg-white rounded-xl overflow-hidden shadow-lg border-t-4 border-pmate-accent/70 hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 transform">
+        <div className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-[1.02] cursor-pointer overflow-hidden border border-gray-100">
             
-            {/* Imagen y Link a Detalles */}
-            <Link to={`/products/${product._id}`}>
-                <div className="h-48 overflow-hidden">
-                    <img 
-                        src={product.images[0] || 'https://via.placeholder.com/400x300?text=Pmate'} 
-                        alt={product.name} 
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            <Link to={`/products/${product._id}`}> 
+                {/* Imagen */}
+                <div className="h-48 w-full overflow-hidden bg-gray-200">
+                    <img
+                        src={product.images[0] || 'https://via.placeholder.com/400x300?text=Pmate'}
+                        alt={product.name}
+                        className="w-full h-full object-cover transition duration-500 group-hover:opacity-80"
                     />
                 </div>
-            </Link>
 
-            {/* Contenido de la Tarjeta */}
-            <div className="p-4 flex flex-col justify-between h-[calc(100%-12rem)]">
-                
-                {/* Título y Categoría */}
-                <div className="flex-grow">
-                    <p className="text-xs font-semibold text-pmate-accent uppercase mb-1">
-                        {product.category}
-                    </p>
-                    <Link to={`/products/${product._id}`}>
+                {/* Contenido */}
+                <div className="p-4 flex flex-col justify-between h-[calc(100%-12rem)]">
+                    <div className="flex-grow">
+                        <p className="text-xs font-semibold text-pmate-accent uppercase mb-1">
+                            {product.category}
+                        </p>
                         <h3 className="text-lg font-bold text-gray-800 hover:text-pmate-primary transition leading-tight">
                             {product.name}
                         </h3>
-                    </Link>
-                </div>
+                    </div>
 
-                {/* Precios y Descuento */}
-                <div className="mt-3">
-                    <p className="text-sm text-gray-500 line-through">
-                        Precio Regular: {formatPrice(product.price)}
-                    </p>
-                    <p className="text-xl font-extrabold text-pmate-primary">
-                        {formatPrice(discountPrice)}
-                    </p>
-                    <p className="text-xs font-semibold text-pmate-accent bg-red-100 p-1 rounded inline-block mt-1">
-                        ¡30% OFF EFEC/TRANSF!
-                    </p>
+                    {/* Precios y Descuento */}
+                    <div className="mt-3">
+                        <p className="text-sm text-gray-500 line-through">
+                            Precio Regular: {formatPrice(product.price)}
+                        </p>
+                        <p className="text-xl font-extrabold text-pmate-primary-600">
+                            {/* ⭐️ USAMOS LA VARIABLE discountPrice AQUI ⭐️ */}
+                            {formatPrice(discountPrice)}
+                        </p>
+                        <p className="text-xs font-semibold text-pmate-accent-600 bg-green-100 p-1 rounded inline-block mt-1">
+                            ¡30% OFF EFEC/TRANSF!
+                        </p>
+                    </div>
                 </div>
+            </Link>
 
-                {/* Botón de Carrito */}
+            {/* Botón de Añadir Carrito (fuera del Link) */}
+            <div className="p-4 border-t">
                 <button
-                    onClick={() => addItem(product, 1)}
-                    className="mt-4 w-full py-2 bg-pmate-primary text-white font-bold rounded-lg hover:bg-pmate-secondary transition-colors duration-300 shadow-md"
+                    // ⭐️ USAMOS EL MANEJADOR handleAddToCart CONECTADO A addItem ⭐️
+                    onClick={handleAddToCart}
+                    className="w-full bg-pmate-primary text-white py-2 rounded-lg font-bold hover:bg-pmate-secondary transition duration-300 text-sm"
                 >
                     Añadir al Carrito
                 </button>

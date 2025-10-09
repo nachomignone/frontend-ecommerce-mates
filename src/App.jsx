@@ -18,6 +18,9 @@ import CategoryPage from './pages/CategoryPage';
 import CartPage from './pages/CartPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
+import OrdersPage from './pages/OrdersPage';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Importar el Proveedor del Contexto
 import { CartProvider } from './context/CartContext';
@@ -37,12 +40,12 @@ function App() {
           {/* 2. CONTENIDO PRINCIPAL Y ENRUTAMIENTO */}
           <main className="flex-grow">
             <Routes>
-              {/* Rutas de Autenticación */}
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/login" element={<LoginPage />} />
-
               {/* Ruta principal (HomePage) */}
               <Route path="/" element={<HomePage searchKeyword={searchKeyword} />} />
+
+              {/* Rutas de Autenticación */}              
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/login" element={<LoginPage />} />
 
               {/* Rutas definidas en el Navbar */}
               <Route path="/tienda" element={<TiendaPage />} />
@@ -56,6 +59,13 @@ function App() {
 
               {/* RUTA DINÁMICA: Usa el parámetro ":id" */}
               <Route path="/products/:id" element={<ProductDetailPage />} />
+
+              {/* Rutas Protegidas: Solo accesibles si el usuario está autenticado */}
+              <Route element={<ProtectedRoute />}>
+                {/* Estas rutas SÓLO se renderizarán si ProtectedRoute permite el acceso */}
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/orders" element={<OrdersPage />} />
+              </Route>
 
               {/* Manejo de Rutas No Encontradas (404) */}
               <Route path="*" element={<NotFoundPage />} />

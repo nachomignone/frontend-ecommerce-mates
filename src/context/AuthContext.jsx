@@ -29,10 +29,17 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('pmate_cart'); 
     };
 
+    // FUNCIÓN PARA ACTUALIZAR EL PERFIL 
+    const updateProfile = (updatedUser) => {
+        setUser(updatedUser);
+        localStorage.setItem('userInfo', JSON.stringify(updatedUser));
+    };
+
     const value = {
         user,
         login,
         logout,
+        updateProfile,
         isAuthenticated: !!user, // Booleano para saber si el usuario está logueado
     };
 
