@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../../context/useCart'; // Hook para el carrito
 
 function ProductCard({ product }) {
-    // ⭐️ CORRECCIÓN 1: Renombramos a addItem, que es la función real del contexto
-    const { addItem } = useCart(); 
+    //  CORRECCIÓN 1: Renombramos a addItem, que es la función real del contexto
+    const { addItem } = useCart();
 
-    // ⭐️ CORRECCIÓN 2: Definición de la función de formato (usada internamente)
+    //  CORRECCIÓN 2: Definición de la función de formato (usada internamente)
     const formatPrice = (price) => {
         return new Intl.NumberFormat('es-AR', {
             style: 'currency',
@@ -16,11 +16,11 @@ function ProductCard({ product }) {
             minimumFractionDigits: 2,
         }).format(price);
     };
-    
-    // ⭐️ CORRECCIÓN 3: La variable discountPrice debe usarse.
-    const discountPrice = product.price * 0.70; 
 
-    // ⭐️ CORRECCIÓN 4: Manjeador del clic, usa addItem (la función real)
+    //  CORRECCIÓN 3: La variable discountPrice debe usarse.
+    const discountPrice = product.price * 0.70;
+
+    //  CORRECCIÓN 4: Manjeador del clic, usa addItem (la función real)
     const handleAddToCart = () => {
         // Asumiendo que addItem maneja la cantidad por defecto como 1
         addItem(product);
@@ -28,8 +28,8 @@ function ProductCard({ product }) {
 
     return (
         <div className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-[1.02] cursor-pointer overflow-hidden border border-gray-100">
-            
-            <Link to={`/products/${product._id}`}> 
+
+            <Link to={`/products/${product._id}`}>
                 {/* Imagen */}
                 <div className="h-48 w-full overflow-hidden bg-gray-200">
                     <img
@@ -52,15 +52,30 @@ function ProductCard({ product }) {
 
                     {/* Precios y Descuento */}
                     <div className="mt-3">
-                        <p className="text-sm text-gray-500 line-through">
-                            Precio Regular: {formatPrice(product.price)}
-                        </p>
-                        <p className="text-xl font-extrabold text-pmate-primary-600">
-                            {/* ⭐️ USAMOS LA VARIABLE discountPrice AQUI ⭐️ */}
+                        {/* Mostrar precio original si hay promoción */}
+                        {product.isPromotion && (
+                            <p className="text-sm text-gray-500 line-through">
+                                Precio Regular: {formatPrice(product.originalPrice)}
+                            </p>
+                        )}
+
+                        {/*  PRECIO CON DESCUENTO (USANDO discountPrice) */}
+                        <p className="text-xl font-extrabold text-red-600">
                             {formatPrice(discountPrice)}
                         </p>
-                        <p className="text-xs font-semibold text-pmate-accent-600 bg-green-100 p-1 rounded inline-block mt-1">
-                            ¡30% OFF EFEC/TRANSF!
+
+                        <p className={`text-xl font-extrabold ${product.isPromotion ? 'text-red-600' : 'text-pmate-accent'}`}>
+                            {product.isPromotion ? product.offerDescription : 'Precio Final'}
+                        </p>
+
+                        {/* Precio de venta (será el precio promocional si existe) */}
+                        <p className="text-2xl font-extrabold text-pmate-primary">
+                            {formatPrice(product.price)}
+                        </p>
+
+                        {/* Mensaje de stock (puede ser reemplazado si quieres usar el offerDescription) */}
+                        <p className="text-xs font-semibold text-red-600 bg-red-100 p-1 rounded inline-block mt-1">
+                            {product.stock > 0 ? 'Disponible' : 'Agotado'}
                         </p>
                     </div>
                 </div>
@@ -69,7 +84,7 @@ function ProductCard({ product }) {
             {/* Botón de Añadir Carrito (fuera del Link) */}
             <div className="p-4 border-t">
                 <button
-                    // ⭐️ USAMOS EL MANEJADOR handleAddToCart CONECTADO A addItem ⭐️
+                    //  USAMOS EL MANEJADOR handleAddToCart CONECTADO A addItem ⭐️
                     onClick={handleAddToCart}
                     className="w-full bg-pmate-primary text-white py-2 rounded-lg font-bold hover:bg-pmate-secondary transition duration-300 text-sm"
                 >
