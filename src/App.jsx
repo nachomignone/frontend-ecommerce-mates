@@ -22,7 +22,8 @@ import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import OrdersPage from './pages/OrdersPage';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import AdminPromotionPage from './pages/AdminPromotionPage'
+import AdminPromotionPage from './pages/AdminPromotionPage';
+import DiscountManagerPage from './pages/DiscountManagerPage';
 
 // Importar el Proveedor del Contexto
 import { CartProvider } from './context/CartContext';
@@ -75,6 +76,7 @@ function App() {
 
                 {/* Ruta de Admin */}
                 <Route path="/admin/promotions" element={<AdminPromotionPage />} />
+                <Route path="/admin/discounts" element={<DiscountManagerPage />} />
               </Route>
 
               {/* Manejo de Rutas No Encontradas (404) */}

@@ -46,6 +46,16 @@ export const AuthDropdown = ({ setIsAuthOpen }) => {
                         >
                             Mis Pedidos
                         </Link>
+                        {/* Si el usuario es administrador, mostramos el panel de gestión*/}
+                        {isAuthenticated && user.isAdmin && (
+                            <Link
+                                to="/admin/discounts"
+                                onClick={handleAction}
+                                className="block px-4 py-2 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition border-t mt-1 pt-1"
+                            >
+                                ⚙️ Gestión de Precios
+                            </Link>
+                        )}
                         <button
                             onClick={() => { logout(); handleAction(); }}
                             className="w-full text-left px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 transition"
