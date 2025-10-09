@@ -6,6 +6,7 @@ import ProductList from '../components/ProductList';
 import CategoryCard from '../components/ui/CategoryCard';
 import ReviewSection from '../components/ReviewSection';
 import ProductCard from '../components/ui/ProductCard'; 
+import PromotionBanner from '../components/ui/PromotionBanner';
 // Importamos los componentes de sección que crearemos después
 
 const API_URL = 'http://localhost:4000/api/products';
@@ -72,6 +73,8 @@ function HomePage({ searchKeyword }) {
   // 4. Renderizado de la Página Principal (cuando los datos están listos)
   return (
     <div className="home-page">
+
+      <PromotionBanner /> 
 
       {/* 1. BANNER PRINCIPAL */}
       <section className="bg-pmate-background py-20 text-center border-b-4 border-pmate-accent">
