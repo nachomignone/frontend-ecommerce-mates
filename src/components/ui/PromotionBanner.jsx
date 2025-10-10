@@ -7,18 +7,27 @@ import { Link } from 'react-router-dom';
 const PromotionBanner = () => {
     const { settings, loading } = usePromotions();
 
-    if (loading || !settings.isActive) {
+    if (loading || !settings) {
         return null; // No mostrar nada si está cargando o inactivo
     }
+
+    if (!settings.isActive) {
+        return null; // No mostrar nada si está inactivo
+    }
+
+    // ⭐️ OBTENEMOS EL PORCENTAJE DINÁMICO ⭐️
+    const percentage = settings.discountPercentage || 0; 
+    const eventName = settings.currentName || 'Oferta Exclusiva';
 
     return (
         <div className="bg-red-600 text-white p-4 my-8 shadow-xl transform skew-y-1 md:skew-y-0 md:h-24 flex items-center justify-center relative overflow-hidden">
             <div className="relative z-10 text-center">
                 <h2 className="text-2xl md:text-3xl font-black uppercase tracking-wider">
-                    {settings.currentName} ¡HA COMENZADO!
+                    {eventName} ¡HA COMENZADO!
                 </h2>
                 <p className="mt-1 text-sm font-semibold">
-                    Descuentos exclusivos del 20% al 40% OFF.
+                    {/* ⭐️ FIX: USAR EL PORCENTAJE DINÁMICO ⭐️ */}
+                    Descuentos exclusivos del {percentage}% OFF.
                     <Link to="/promociones" className="ml-2 underline hover:text-yellow-300 transition">
                         Ver todas las ofertas
                     </Link>

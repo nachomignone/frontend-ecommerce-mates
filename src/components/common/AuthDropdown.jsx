@@ -53,7 +53,17 @@ export const AuthDropdown = ({ setIsAuthOpen }) => {
                                 onClick={handleAction}
                                 className="block px-4 py-2 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition border-t mt-1 pt-1"
                             >
-                                ⚙️ Gestión de Precios
+                                Gestión de Precios
+                            </Link>
+                        )}
+                        {/*  ENLACE DIRECTO A GESTIÓN DE Promociones  */}
+                        {user.isAdmin && (
+                            <Link 
+                                to="/admin/promotions" 
+                                onClick={handleAction} 
+                                className="block px-4 py-2 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition border-b border-gray-100"
+                            >
+                                Gestión de Promociones
                             </Link>
                         )}
                         <button

@@ -4,12 +4,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/useAuth'; // hook personalizado para usar el contexto de autenticación
 
+const API_PROFILE_URL = 'http://localhost:4000/api/users/profile'; // URL de la API de perfil
+
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
-    const { login } = useAuth(); // Obtenemos la función de login del contexto
+    const { login, updateProfile } = useAuth(); // Obtenemos la función de login del contexto
     const navigate = useNavigate(); // Hook para la redirección
 
     const submitHandler = async (e) => {
@@ -31,8 +33,27 @@ const LoginPage = () => {
             // Redirige a la página principal después del login
             navigate('/');
 
+            // ⭐️ PASO 2: SINCRONIZACIÓN DE PERMISOS (Llamada a la ruta protegida) ⭐️
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${_data.token}`, // Usamos el nuevo token
+                },
+            };
+            
+            // Llamamos al GET /api/users/profile para obtener todos los permisos actualizados.
+            const { data: updatedUserData } = await axios.get(API_PROFILE_URL, config);
+            
+            // ⭐️ PASO 3: Actualizar el estado global con los permisos completos ⭐️
+            // Guardamos el token anterior para que no se pierda
+            updateProfile({ ...updatedUserData, token: _data.token }); 
+
             setMessage('Inicio de sesión exitoso! Redirigiendo...'); // o Registro exitoso! Redirigiendo a la tienda...
             // En un paso futuro, guardaremos el token y el usuario aquí
+
+            // 4. Redirigir
+            setTimeout(() => {
+                navigate('/');
+            }, 1000); 
 
         } catch (error) {
             setMessage(error.response && error.response.data.message

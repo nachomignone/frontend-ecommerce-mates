@@ -25,7 +25,7 @@ const DiscountManagerPage = () => {
                 ...p,
                 isEditing: false,
                 newDiscountPrice: p.price * 0.70, // Precio sugerido por defecto (30% off)
-                offerDescription: '30% OFF EFEC/TRANSF'
+                offerDescription: p.offerDescription || 'Oferta Especial', // Inicializa con la descripción actual o vacío
             }));
             setProducts(productsWithState);
             setMessage('');
@@ -36,34 +36,41 @@ const DiscountManagerPage = () => {
         }
     };
 
-    useEffect(() => {
+        useEffect(() => {
         if (token) fetchProducts();
+        // Nota: El fetchProducts se encarga de llamar al Backend.
+        // No necesitamos inicializar offerDescription aquí.
     }, [token]);
 
     // 2. Manejar la creación/actualización del descuento
     const handleSetDiscount = async (product) => {
         if (!token) return setMessage('Error: No logueado.');
 
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const price = parseFloat(product.newDiscountPrice);
-
-        if (isNaN(price) || price <= 0 || price >= product.price) {
-            setMessage(`El precio debe ser un número válido y menor que ${product.price}.`);
+        // ⭐️ CLAVE: EL ADMIN INGRESA EL PORCENTAJE (ej: 0.20 para 20%) ⭐️
+        const discountPercentage = parseFloat(product.newDiscountPrice); // Usamos newDiscountPrice para el %
+        
+        if (isNaN(discountPercentage) || discountPercentage < 0 || discountPercentage > 100) {
+            setMessage(`El descuento debe ser un porcentaje válido entre 0 y 100.`);
             return;
         }
 
+        // ⭐️ Calcular el precio FINAL para enviar al Backend ⭐️
+        const originalPrice = product.originalPrice || product.price;
+        const discountedPrice = originalPrice * (1 - (discountPercentage / 100)); // Pasa 20 a 0.80
+
         try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
             //  Llamada al Backend para crear/actualizar el descuento
             const { data } = await axios.post(
                 DISCOUNT_URL,
                 {
                     productId: product._id,
-                    discountedPrice: price,
+                    discountedPrice: discountedPrice,
                     offerDescription: product.offerDescription,
                 },
                 config
             );
-            setMessage(`✅ Descuento de ${data.discount.discountedPrice} aplicado a ${product.name}`);
+            setMessage(`✅ Descuento de ${data.discountedPercentage} aplicado a ${product.name}`);
             fetchProducts(); // Refrescar la lista para ver el cambio
         } catch (error) {
             setMessage(`❌ Error al aplicar descuento: ${error.response?.data?.message || error.message}`);
@@ -110,6 +117,13 @@ const DiscountManagerPage = () => {
         return <div className="p-10 text-center">Cargando catálogo de administrador...</div>;
     }
 
+     // Función de utilidad para manejar el cambio de precio (reutilizada para la descripción)
+    const handleInputChange = (_id, field, value) => {
+        setProducts(products.map(p => 
+            p._id === _id ? { ...p, [field]: value } : p
+        ));
+    };
+
     return (
         <div className="max-w-7xl mx-auto my-8 p-8 bg-pmate-background rounded-xl shadow-2xl">
             <h1 className="text-4xl font-extrabold text-pmate-primary mb-2">
@@ -139,19 +153,26 @@ const DiscountManagerPage = () => {
                         <div className="flex space-x-2 items-center">
                             
                             {product.isEditing ? (
-                                <>
+                                <div className="space-y-2">
                                     <input 
                                         type="number" 
-                                        value={product.newDiscountPrice}
+                                        value={product.newDiscountPrice} // Usamos newDiscountPrice para el porcentaje
                                         onChange={(e) => handlePriceChange(product._id, e.target.value)}
                                         className="w-24 p-2 border border-pmate-accent rounded text-gray-800"
-                                        placeholder="Nuevo Precio"
+                                        placeholder="%"
+                                    />
+                                    <input 
+                                        type="text" 
+                                        value={product.offerDescription}
+                                        onChange={(e) => handleInputChange(product._id, 'offerDescription', e.target.value)}
+                                        className="w-full p-2 border border-pmate-accent rounded text-gray-800 text-sm"
+                                        placeholder="Ej: Día de la Madre 20% OFF"
                                     />
                                     <button 
                                         onClick={() => handleSetDiscount(product)}
                                         className="bg-green-600 text-white p-2 rounded hover:bg-green-700 transition"
                                     >
-                                        Aplicar
+                                        Aplicar %
                                     </button>
                                     <button 
                                         onClick={() => startEditing(null)}
@@ -159,7 +180,7 @@ const DiscountManagerPage = () => {
                                     >
                                         Cancelar
                                     </button>
-                                </>
+                                </div>
                             ) : (
                                 <>
                                     <button 

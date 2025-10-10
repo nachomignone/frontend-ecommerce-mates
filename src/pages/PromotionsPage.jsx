@@ -1,26 +1,51 @@
 // src/pages/PromotionsPage.jsx
-import React from 'react';
+
+// ⭐️ IMPORTAR useMemo ⭐️
+import React, { useMemo } from 'react'; 
 import ProductList from '../components/ProductList'; 
-import { useProductsByFilter } from '../hooks/useProductsByFilter'; // ⬅️ Crearemos este Hook
+import { useProductsByFilter } from '../hooks/useProductsByFilter'; 
+import { usePromotions } from '../context/usePromotions';
 
 const PromotionsPage = () => {
-    // 💡 Usarías un hook similar a HomePage para cargar los productos promocionales.
-    // Para simplificar, asumiremos que los productos destacados (isFeatured: true) son promociones.
-    const { products, loading, error } = useProductsByFilter('isFeatured', true);
+    const { settings } = usePromotions();
+    
+    // ⭐️ FIX: Memoizar el objeto vacío para que sea estable ⭐️
+    // Esto asegura que la referencia del objeto de filtros sea la misma en cada renderizado.
+    const stableFilters = useMemo(() => ({}), []);
+    
+    // Traemos TODOS los productos (el Backend inyecta el flag isPromotion: true/false)
+    const { products, loading, error } = useProductsByFilter(stableFilters); // ⬅️ Usamos el objeto estable
+    
+    // ⭐️ FILTRADO CLAVE: Solo mostrar productos donde la bandera fue inyectada por el Backend ⭐️
+    const promotionalProducts = products.filter(p => p.isPromotion === true);
+    
+    const eventName = settings.currentName || 'Ofertas';
 
-    // Renderizado condicional...
-    if (loading) return <div className="p-10 text-center">Cargando promociones...</div>;
-    if (error) return <div className="p-10 text-center text-red-600">Error al cargar promociones.</div>;
+    //  Nuevo: Comprobación de estado activo 
+    const isPromoActive = settings.isActive;
 
+    if (loading) return <div className="p-10 text-center">Cargando ofertas...</div>;
+    if (error) return <div className="p-10 text-center text-red-600">Error al cargar ofertas.</div>;
+    
     return (
         <div className="max-w-7xl mx-auto p-8">
-            <h1 className="text-4xl font-extrabold text-red-600 mb-8">🔥 Promociones y Ofertas</h1>
-            <p className="text-lg text-gray-600 mb-6">Aprovecha nuestros descuentos exclusivos en sets y mates seleccionados.</p>
+            {/* ⭐️ FIX 1: Título Condicional ⭐️ */}
+            <h1 className="text-4xl font-extrabold text-red-600 mb-2">
+                {isPromoActive ? eventName.toUpperCase() : 'NO HAY PROMOCIONES ACTIVAS'}
+            </h1>
+            <p className="text-lg text-gray-600 mb-8">
+                {isPromoActive
+                    ? `¡Descuentos válidos! ${promotionalProducts.length} productos en oferta.`
+                    : 'Visita la tienda para ver nuestro catálogo completo.'}
+            </p>
             
-            {products.length === 0 ? (
-                 <p className="text-xl text-gray-700 text-center py-10 bg-pmate-background rounded-lg">No hay ofertas activas en este momento.</p>
+            {promotionalProducts.length === 0 ? (
+                 // ⭐️ FIX 2: Mostrar mensaje de inactividad si no hay productos filtrados ⭐️
+                 <p className="text-xl text-gray-700 text-center py-10 bg-pmate-background rounded-lg">
+                    Actualmente no hay promociones disponibles.
+                </p>
             ) : (
-                <ProductList products={products} />
+                <ProductList products={promotionalProducts} />
             )}
         </div>
     );
