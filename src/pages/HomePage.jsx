@@ -110,11 +110,10 @@ function HomePage({ searchKeyword }) {
       </section>
 
 
-      <section className="section-destacados">
-        <h2 className="text-xl font-bold text-pmate-primary text-center mb-8"> Productos Destacados </h2>
+      <section className="section-destacados py-12">
+        <h2 className="text-3xl font-bold text-pmate-primary text-center mb-8"> Productos Destacados </h2>
         {products.length > 0 ? (
-          // Muestra el nombre de los primeros 5 productos como prueba de conexión
-          <ProductList products={products} />
+          <ProductList products={products.slice(0,3)} />
         ) : (
           <p>No hay productos en la base de datos. Usa tu API POST para agregar algunos.</p>
         )}
