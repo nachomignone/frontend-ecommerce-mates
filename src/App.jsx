@@ -61,8 +61,6 @@ function App() {
               <Route path="/promociones" element={<PromotionsPage />} />
               <Route path="/cart" element={<CartPage />} />
 
-              {/* Ruta dinámica para categorías */}
-              <Route path="/categorias/:categoryName" element={<CategoryPage />} />
 
               {/* RUTA DINÁMICA: Usa el parámetro ":id" */}
               <Route path="/products/:id" element={<ProductDetailPage />} />

@@ -1,49 +1,96 @@
+// src/pages/TiendaPage.jsx (Reemplaza CatalogPage)
+
 import React, { useState, useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom'; // ⬅️ useLocation para leer el filtro
 import axios from 'axios';
 import ProductList from '../components/ProductList';
+import FilterSidebar from '../components/ui/FilterSidebar';
+import PromotionBanner from '../components/ui/PromotionBanner'; // Si lo usas
+import { usePromotions } from '../context/usePromotions'; // Para el banner
 
-// ⭐️ NO recibe el keyword/filtro por defecto ⭐️
 const API_URL = 'http://localhost:4000/api/products'; 
 
-function TiendaPage() {
+const TiendaPage = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
+    const location = useLocation(); // Hook para acceder a la URL
+    const { settings } = usePromotions(); // Para el banner y contexto
+    
+    // ⭐️ FIX: El useEffect solo necesita 'location.search' como única dependencia ⭐️
     useEffect(() => {
-        const fetchAllProducts = async () => {
-            try {
-                // Llama al endpoint de productos sin filtros
-                const response = await axios.get(API_URL); 
-                setProducts(response.data);
-            } catch (err) {
-                setError('Error al cargar la tienda completa.', err);
-            } finally {
+        setLoading(true);
+
+        const allParams = location.search; // El valor de búsqueda
+
+        let url = API_URL;
+
+        if (allParams) {
+            url = `${API_URL}?${allParams}`;
+        }
+        
+        axios.get(url)
+            .then(response => {
+                setProducts(response.data); 
+            })
+            .catch(error => {
+                console.error("Error al cargar productos:", error);
+            })
+            .finally(() => {
                 setLoading(false);
-            }
+            });
+            
+    // ⭐️ FIX: Usar solo la dependencia location.search, que es la fuente de verdad. ⭐️
+    // React Hook Exhaustive Deps ahora lo acepta si la lógica interna depende de la dependencia
+    }, [location.search]); 
+
+    // Función para obtener el valor del query param 'category' (Ahora es una función local)
+        const getCategoryFromUrl = () => {
+             const params = new URLSearchParams(location.search);
+             return params.get('category');
         };
 
-        fetchAllProducts();
-    }, []); // Se ejecuta solo una vez al montar
+    const pageTitle = getCategoryFromUrl() 
+        ? `Catálogo: ${getCategoryFromUrl()}`
+        : 'Catálogo Completo de Productos';
 
-    if (loading) {
-        return <div className="p-10 text-center">Cargando catálogo completo...</div>;
-    }
-
-    if (error) {
-        return <div className="p-10 text-center text-red-600 font-bold">{error}</div>;
-    }
 
     return (
-        <div className="max-w-7xl mx-auto p-8">
-            <h1 className="text-4xl font-extrabold text-pmate-primary mb-8">
-                Catálogo Completo ({products.length} Productos)
-            </h1>
-            
-            {/* ⭐️ Usa el componente ProductList para mostrar la cuadrícula ⭐️ */}
-            <ProductList products={products} />
+        <div className="min-h-screen">
+            {settings.isActive && <PromotionBanner />}
+            <div className="max-w-7xl mx-auto py-12 px-4">
+                <h1 className="text-4xl font-extrabold text-pmate-primary mb-8 text-center">
+                    {pageTitle} ({products.length})
+                </h1>
+
+                {loading && (
+                    <p className="text-center text-xl text-gray-500">Cargando productos...</p>
+                )}
+
+                {!loading && products.length === 0 && (
+                    <div className="text-center py-20">
+                        <p className="text-2xl font-semibold text-red-500">
+                            ¡Lo sentimos! No hay productos en esta sección.
+                        </p>
+                        <Link to="/tienda" className="text-pmate-accent hover:underline mt-4 inline-block">
+                             Ver Catálogo Completo
+                        </Link>
+                    </div>
+                )}
+
+                {!loading && products.length > 0 && (
+                    // //  ESTRUCTURA DE DOS COLUMNAS (Grid) 
+                    // <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                        
+                    //      Columna 1: Barra Lateral 
+                    //     <div className="lg:col-span-1">
+                    //         <FilterSidebar />
+                    //     </div>
+
+                    <ProductList products={products} />
+                )}
+            </div>
         </div>
     );
-}
+};
 
 export default TiendaPage;

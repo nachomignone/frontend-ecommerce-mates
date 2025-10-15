@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'; // IMPORTANTE: Importamos los Hooks
-
+import { Link } from 'react-router-dom';
 import axios from 'axios'; // Para hacer llamadas HTTP a la API
 
 import ProductList from '../components/ProductList';
@@ -10,6 +10,16 @@ import PromotionBanner from '../components/ui/PromotionBanner';
 // Importamos los componentes de sección que crearemos después
 
 const API_URL = 'http://localhost:4000/api/products';
+
+// ⭐️ DATOS DE CATEGORÍAS CON IMÁGENES ⭐️
+const ALL_CATEGORIES = [
+    { name: 'Mates', image: '/assets/images/categoryMates.png' },
+    { name: 'Combos', image: '/assets/images/categoryCombos.png' },
+    { name: 'Bombillas', image: '/assets/images/categoryBombillas.png' },
+    { name: 'Termos', image: '/assets/images/categoryTermos.png' },
+    { name: 'Yerbas', image: '/assets/images/categoryYerbas.png' },
+    { name: 'Materas', image: '/assets/images/categoryMatera.png' },
+];
 
 function HomePage({ searchKeyword }) {
   // 1. Estados para manejar los datos y el ciclo de vida de la petición
@@ -73,41 +83,52 @@ function HomePage({ searchKeyword }) {
   // 4. Renderizado de la Página Principal (cuando los datos están listos)
   return (
     <div className="home-page">
-
+      
+      {/* BANNER DE PROMOCIÓN ACTIVA */}
       <PromotionBanner /> 
 
-      {/* 1. BANNER PRINCIPAL */}
-      <section className="bg-pmate-background py-20 text-center border-b-4 border-pmate-accent">
-        <h1 className="text-5xl font-extrabold text-pmate-primary mb-4">
-          Un Mate a la Medida de Cada Ocasión
-        </h1>
-        <p className="text-xl font-medium text-gray-700 mb-6">
-          {/* Hemos cargado **{products.length} productos** desde la API. ¡Conexión Full-Stack Exitosa!*/}
-          Descubrí nuestra selección exclusiva de mates y combos diseñados para cada momento.
-        </p>
-
-        {/* Botón CTA (siguiendo el estilo redondeado) */}
-        <button className="bg-pmate-accent text-pmate-primary font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#03bcfa]/80 transition duration-300">
-          Ver Combos Exclusivos
-        </button>
-      </section>
-
+      {/* ⭐️ HERO SECTION (Banner con Imagen) ⭐️ */}
+            <div className="relative h-96 md:h-[500px] bg-pmate-primary overflow-hidden">
+                {/* Imagen de Fondo (Asegúrate de que la URL sea correcta) */}
+                <img
+                    src="/assets/images/bannerHero2.jpg"
+                    alt="Colección de mates y termos de Pmate"
+                    className="w-full h-full object-cover opacity-60"
+                />
+                
+                {/* Contenido Central */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                    <h1 className="text-5xl md:text-7xl font-black text-white drop-shadow-lg mb-4 uppercase tracking-tight">
+                        PMATE
+                    </h1>
+                    <p className="text-xl md:text-2xl text-white font-semibold mb-8 max-w-lg">
+                        Un mate a la medida de cada ocasión.
+                    </p>
+                    <Link
+                        to="/tienda"
+                        className="bg-pmate-accent text-pmate-primary font-bold py-3 px-8 rounded-full shadow-xl hover:bg-pmate-secondary transition duration-300 transform hover:scale-105"
+                    >
+                        Ver Catálogo
+                    </Link>
+                </div>
+            </div>
       {/* 2. SECCIONES DE PRODUCTOS (Categorías y Destacados) */}
-      <section className="py-12 px-4 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-pmate-primary text-center mb-8">
-         Explora nuestras Categorías
-        </h2>
+            <section className="py-12 px-6 max-w-7xl mx-auto"> 
+                <h2 className="text-3xl font-bold text-pmate-primary text-center mb-8">
+                    Explorá nuestras Categorías
+                </h2>
 
-        {/* Contenedor Grid: 3 columnas en desktop, es mejor para mostrar variedad */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          <CategoryCard name="Mates" link="/categorias/mates" />
-          <CategoryCard name="Combos" link="/categorias/combos" />
-          <CategoryCard name="Bombillas" link="/categorias/bombillas" />
-          <CategoryCard name="Termos" link="/categorias/termos" />
-          <CategoryCard name="Yerbas" link="/categorias/yerbas" />
-          <CategoryCard name="Materas" link="/categorias/materas" />
-        </div>
-      </section>
+                {/* Contenedor Grid: 6 columnas para Desktop (lg:grid-cols-6) */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"> 
+                    {ALL_CATEGORIES.map((category) => (
+                        <CategoryCard 
+                            key={category.name} 
+                            name={category.name} 
+                            imageUrl={category.image} // ⬅️ PASAMOS LA IMAGEN
+                        />
+                    ))}
+                </div>
+            </section>
 
 
       <section className="section-destacados py-12">
