@@ -81,7 +81,7 @@ function Navbar({ setSearchKeyword }) {
               >
                 {/* Icono de Usuario (o 👤) - Si está logueado, cambia el color para distinguirlo */}
                 <span className={isAuthenticated ? "text-pmate-accent" : "text-white"}>
-                  👤
+                  Perfil
                 </span>
               </button>
 
@@ -102,7 +102,7 @@ function Navbar({ setSearchKeyword }) {
                 }}
                 className="p-2 text-white rounded-full hover:bg-pmate-secondary transition duration-150 relative"
               >
-                🛒
+                Carrito
                 {/* Contador */}
                 <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
                   {totalItems}
