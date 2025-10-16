@@ -1,31 +1,29 @@
-// src/pages/TiendaPage.jsx (Reemplaza CatalogPage)
+// src/pages/TiendaPage.jsx
 
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom'; // ⬅️ useLocation para leer el filtro
+import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import ProductList from '../components/ProductList';
 import FilterSidebar from '../components/ui/FilterSidebar';
-import PromotionBanner from '../components/ui/PromotionBanner'; // Si lo usas
-import { usePromotions } from '../context/usePromotions'; // Para el banner
+import PromotionBanner from '../components/ui/PromotionBanner';
+import { usePromotions } from '../context/usePromotions';
 
 const API_URL = 'http://localhost:4000/api/products'; 
 
 const TiendaPage = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const location = useLocation(); // Hook para acceder a la URL
-    const { settings } = usePromotions(); // Para el banner y contexto
+    const location = useLocation();
+    const { settings } = usePromotions();
     
-    // ⭐️ FIX: El useEffect solo necesita 'location.search' como única dependencia ⭐️
     useEffect(() => {
         setLoading(true);
 
-        const allParams = location.search; // El valor de búsqueda
-
+        const allParams = location.search;
         let url = API_URL;
 
         if (allParams) {
-            url = `${API_URL}?${allParams}`;
+            url = `${API_URL}${allParams}`;
         }
         
         axios.get(url)
@@ -39,20 +37,19 @@ const TiendaPage = () => {
                 setLoading(false);
             });
             
-    // ⭐️ FIX: Usar solo la dependencia location.search, que es la fuente de verdad. ⭐️
-    // React Hook Exhaustive Deps ahora lo acepta si la lógica interna depende de la dependencia
     }, [location.search]); 
 
-    // Función para obtener el valor del query param 'category' (Ahora es una función local)
-        const getCategoryFromUrl = () => {
-             const params = new URLSearchParams(location.search);
-             return params.get('category');
-        };
+    // Función para obtener el valor del query param 'category'
+    const getCategoryFromUrl = () => {
+        const params = new URLSearchParams(location.search);
+        return params.get('category');
+    };
 
-    const pageTitle = getCategoryFromUrl() 
-        ? `Catálogo: ${getCategoryFromUrl()}`
+    // Mejorar el título de la página
+    const currentCategory = getCategoryFromUrl();
+    const pageTitle = currentCategory 
+        ? `Categoría: ${currentCategory}`
         : 'Catálogo Completo de Productos';
-
 
     return (
         <div className="min-h-screen">
@@ -78,14 +75,6 @@ const TiendaPage = () => {
                 )}
 
                 {!loading && products.length > 0 && (
-                    // //  ESTRUCTURA DE DOS COLUMNAS (Grid) 
-                    // <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                        
-                    //      Columna 1: Barra Lateral 
-                    //     <div className="lg:col-span-1">
-                    //         <FilterSidebar />
-                    //     </div>
-
                     <ProductList products={products} />
                 )}
             </div>

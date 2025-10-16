@@ -94,7 +94,7 @@ function ProductCard({ product }) {
             <div className="p-4 pt-4 border-t border-gray-100 flex justify-between items-end space-x-3">
                 
                 {/* 1. Texto de promoción de grabado (Solo aparece si es Mate) */}
-                {product.category === 'Mates' ? (
+                {product.category === 'mates' ? (
                     <p className="text-xs text-pmate-secondary max-w-[55%] font-semibold leading-snug">
                         Agregando la compra de tu Mate una Bombilla TE REGALAMOS EL GRABADO!
                     </p>

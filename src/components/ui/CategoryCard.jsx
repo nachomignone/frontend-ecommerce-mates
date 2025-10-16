@@ -1,15 +1,16 @@
-// src/components/ui/CategoryCard.jsx
+//src/components/ui/CategoryCard.jsx
 
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const CategoryCard = ({ name, imageUrl }) => {
-    // ⭐️ FIX: La URL redirige a /catalogo con el filtro de categoría (Query Param)
-    const linkTo = `/tienda`;
+    // ⭐️ Enviamos el nombre EXACTO de la categoría (sin toLowerCase)
+    // Esto asegura que coincida con cómo está guardado en tu base de datos
+    const linkTo = `/tienda?category=${encodeURIComponent(name)}`;
 
     return (
         <Link 
-            to={linkTo} // Usa /tienda?category=Mates
+            to={linkTo}
             className="block h-32 md:h-48 bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 relative" 
         >
             {/* Imagen de Fondo Estética */}

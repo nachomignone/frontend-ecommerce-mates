@@ -8,7 +8,7 @@ const FILTER_OPTIONS = [
     {
         title: 'Categoría Principal',
         key: 'category', // Usamos 'category' como la clave de la query
-        options: ['Mates', 'Combos', 'Bombillas', 'Termos', 'Yerbas', 'Materas'],
+        options: ['mates', 'combos', 'bombillas', 'termos', 'yerbas', 'materas'],
     },
     {
         title: 'Material (Mates)',
@@ -32,16 +32,37 @@ const FilterSidebar = () => {
     // Manejador principal de clics en filtros
     const handleFilterChange = (key, value) => {
         const newParams = new URLSearchParams(location.search);
-
-         // ⭐️ FIX: Convertir el valor a minúsculas antes de enviar ⭐️
+        //Convertir el valor a minúsculas antes de enviar 
         const lowerValue = value.toLowerCase();
 
-        // Si el filtro ya está activo, lo elimina. Si no, lo establece.
-        if (newParams.get(key) === lowerValue) {
-            newParams.delete(key);
+        // LÓGICA CLAVE PARA MÚLTIPLES CATEGORÍAS 
+        if (key === 'category') {
+            const currentCategories = newParams.get(key) ? newParams.get(key).split(',') : [];
+            
+            if (currentCategories.includes(lowerValue)) {
+                // Si ya existe, lo eliminamos
+                const updatedCategories = currentCategories.filter(c => c !== lowerValue);
+                if (updatedCategories.length === 0) {
+                    newParams.delete(key);
+                } else {
+                    newParams.set(key, updatedCategories.join(','));
+                }
+            } else {
+                // Si no existe, lo añadimos
+                currentCategories.push(lowerValue);
+                newParams.set(key, currentCategories.join(','));
+            }
+
+            // Si cambiamos la categoría, borramos el filtro de material para evitar conflictos
+            newParams.delete('material');
+            
         } else {
-            // Reemplaza cualquier filtro existente de esa CLAVE (ej: si cambia de 'Mate' a 'Combo')
-            newParams.set(key, lowerValue); 
+            // Lógica simple para filtros unitarios (material, etc.)
+            if (newParams.get(key) === lowerValue) {
+                newParams.delete(key);
+            } else {
+                newParams.set(key, lowerValue);
+            }
         }
 
         // Navega a la nueva URL con los parámetros actualizados

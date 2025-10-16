@@ -20,7 +20,7 @@ const AdminPromotionPage = () => {
     const [localEndDate, setLocalEndDate] = useState('');
     
     // LISTA DE CATEGORÍAS DISPONIBLES
-    const ALL_CATEGORIES = ['Mates', 'Combos', 'Bombillas', 'Termos', 'Yerbas', 'Materas'];
+    const ALL_CATEGORIES = ['mates', 'combos', 'bombillas', 'termos', 'yerbas', 'materas'];
 
     // ⭐️ SINCRONIZAR ESTADO LOCAL CON EL CONTEXTO (settings) ⭐️
     useEffect(() => {

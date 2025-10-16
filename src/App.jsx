@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useState } from 'react';
 // Importamos elementos clave de React Router
 import { Routes, Route } from 'react-router-dom';
